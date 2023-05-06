@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 import gym
 import random
-from collections import  deque
+from collections import deque
 
 num_episodes=500 #游戏训练总epi数
 num_exploration_episode=100
@@ -15,6 +15,7 @@ final_epsilon=0.01 #探索终止时的探索率
 
 
 class QNetwork(tf.keras.Model):
+
     def __int__(self):
         super().__init__()
         self.dense1=tf.keras.layers.Dense(units=24,activation=tf.nn.relu)
@@ -36,7 +37,7 @@ class QNetwork(tf.keras.Model):
 
 if __name__=='__main__':
     env=gym.make('CartPole-v1')
-    model=QNetwork
+    model=QNetwork()
     optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate)
     replay_buffer=deque(maxlen=10000) #使用一个deque作为Qlearning的经验回放池
     epsilon=initial_epsilon
@@ -56,7 +57,7 @@ if __name__=='__main__':
                 action=action[0]
 
             #让环境执行动作，获得执行完动作的下一个状态、动作的奖励，游戏是否已结束以及额外信息
-            next_state,reward,done,info=env.step(action)
+            next_state,reward,truncated,done,info=env.step(action)
             #如果游戏结束，给予大的负奖励
             reward=-10. if done else reward
             #将（state,action,reward,next_state)的四元组（外加done标签表示是否结束）放入经验回放池
